@@ -6,7 +6,7 @@ import ru.rsreu.kibamba.labswork02.RectangleMethodIntegralCalculator;
 import java.io.FileNotFoundException;
 
 public class Runner {
-    private static final double ERROR_RATE = 1E-2;
+    private static final double ERROR_RATE = 1E-8;
     private static final double A = 0.0;
     private static final double B = 1.0;
 

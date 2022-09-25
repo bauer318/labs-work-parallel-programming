@@ -23,6 +23,7 @@ public class RectangleMethodIntegralCalculator {
         double h = (b-a)/segmentNumber;
         for(double i = a; i<=(b-h);i+=h){
             result += h*function.f((i+i+h)/2);
+            System.out.println((i*100)+ " % done");
         }
         return result;
     }
