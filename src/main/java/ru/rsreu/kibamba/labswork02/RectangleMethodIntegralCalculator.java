@@ -21,9 +21,17 @@ public class RectangleMethodIntegralCalculator {
         double result = 0.0;
         int segmentNumber = getSegmentNumber(a,b);
         double h = (b-a)/segmentNumber;
+        double percentWorkDone = 0.0;
+        double tempPercentWorkDone = 0.0;
+        int it = 0;
         for(double i = a; i<=(b-h);i+=h){
             result += h*function.f((i+i+h)/2);
-            System.out.println((i*100)+ " % done");
+            percentWorkDone = Math.round( (((double) it) / segmentNumber) * 100 );
+            if(percentWorkDone-tempPercentWorkDone>=10){
+                System.out.println(percentWorkDone+ "% done");
+                tempPercentWorkDone = percentWorkDone;
+            }
+            it++;
         }
         return result;
     }

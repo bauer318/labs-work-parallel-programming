@@ -11,13 +11,15 @@ public class Runner {
     private static final double B = 1.0;
 
     public static void main(String[] args) {
-        /*CircleSurfaceCalculator circleSurfaceCalculator = new CircleSurfaceCalculator();
-        System.out.println(circleSurfaceCalculator.calculateCircleSurface(25));*/
-        long startTime = System.currentTimeMillis();
-        RectangleMethodIntegralCalculator rectangleMethodIntegralCalculator = new RectangleMethodIntegralCalculator(ERROR_RATE);
-        System.out.println(rectangleMethodIntegralCalculator.calculateIntegral(A, B, x -> {
-            return Math.sin(x) * x;
-        }));
-        System.out.println("Time : " + (System.currentTimeMillis() - startTime) + " ms");
+        Thread integralThread = new Thread(()->{
+                long startTime = System.currentTimeMillis();
+                RectangleMethodIntegralCalculator rectangleMethodIntegralCalculator = new RectangleMethodIntegralCalculator(ERROR_RATE);
+                double result = rectangleMethodIntegralCalculator.calculateIntegral(A,B,x->{
+                    return Math.sin(x) * x;
+                });
+                System.out.println("Result :"+result);
+                System.out.println("Time : " + (System.currentTimeMillis() - startTime) + " ms");
+        });
+        integralThread.start();
     }
 }
