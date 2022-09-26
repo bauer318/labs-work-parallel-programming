@@ -21,7 +21,7 @@ public class RectangleMethodIntegralCalculator {
         double result = 0.0;
         int n = getN(a,b);
         double h = (b-a)/n;
-        double percentWorkDone = 0.0;
+        double percentWorkDone;
         double tempPercentWorkDone = 0.0;
         int it = 0;
         for(double i = a; i<=(b-h);i+=h){
