@@ -7,7 +7,7 @@ public class RectangleMethodIntegralCalculator {
         this.errorRate = errorRate;
     }
 
-    public int getSegmentNumber(double a, double b) {
+    public int getN(double a, double b) {
         int result = 1;
         while ((b - a) / result > errorRate) {
             result++;
@@ -19,14 +19,14 @@ public class RectangleMethodIntegralCalculator {
             return 0;
         }
         double result = 0.0;
-        int segmentNumber = getSegmentNumber(a,b);
-        double h = (b-a)/segmentNumber;
+        int n = getN(a,b);
+        double h = (b-a)/n;
         double percentWorkDone = 0.0;
         double tempPercentWorkDone = 0.0;
         int it = 0;
         for(double i = a; i<=(b-h);i+=h){
             result += h*function.f((i+i+h)/2);
-            percentWorkDone = Math.round( (((double) it) / segmentNumber) * 100 );
+            percentWorkDone = Math.round( (((double) it) / n) * 100 );
             if(percentWorkDone-tempPercentWorkDone>=10){
                 System.out.println(percentWorkDone+ "% done");
                 tempPercentWorkDone = percentWorkDone;
