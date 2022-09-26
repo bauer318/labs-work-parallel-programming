@@ -1,9 +1,6 @@
 package ru.rsreu.kibamba;
 
-import ru.rsreu.kibamba.labs01.CircleSurfaceCalculator;
-import ru.rsreu.kibamba.labswork02.RectangleMethodIntegralCalculator;
-
-import java.io.FileNotFoundException;
+import ru.rsreu.kibamba.labswork03.RectangleMethodIntegralCalculator;
 
 public class Runner {
     private static final double ERROR_RATE = 1E-8;

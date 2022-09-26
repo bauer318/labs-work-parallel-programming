@@ -1,4 +1,4 @@
-package ru.rsreu.kibamba.labswork02;
+package ru.rsreu.kibamba.labswork03;
 
 public class RectangleMethodIntegralCalculator {
     private double errorRate;
