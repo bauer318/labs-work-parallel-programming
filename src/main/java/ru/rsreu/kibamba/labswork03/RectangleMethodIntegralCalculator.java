@@ -14,24 +14,20 @@ public class RectangleMethodIntegralCalculator {
         }
         return result;
     }
-    public double calculateIntegral(double a, double b, Function function){
-        if(a>b){
+
+    public double calculateIntegral(double a, double b, Function function) throws InterruptedException {
+        if (a > b) {
             return 0;
         }
         double result = 0.0;
-        int n = getN(a,b);
-        double h = (b-a)/n;
-        double percentWorkDone;
-        double tempPercentWorkDone = 0.0;
+        int n = getN(a, b);
+        double h = (b - a) / n;
         int it = 0;
-        for(double i = a; i<=(b-h);i+=h){
-            result += h*function.f((i+i+h)/2);
-            percentWorkDone = Math.round( (((double) it) / n) * 100 );
-            if(percentWorkDone-tempPercentWorkDone>=10){
-                System.out.println(percentWorkDone+ "% done");
-                tempPercentWorkDone = percentWorkDone;
+        for (double i = a; i <= (b - h); i += h) {
+            if (Thread.currentThread().isInterrupted()) {
+                throw new InterruptedException(Thread.currentThread().getName() + " been interrupted");
             }
-            it++;
+            result += h * function.f((i + i + h) / 2);
         }
         return result;
     }

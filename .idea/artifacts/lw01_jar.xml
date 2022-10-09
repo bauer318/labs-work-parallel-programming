@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="lw01:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/lw01_jar</output-path>
+    <root id="archive" name="lw01.jar">
+      <element id="module-output" name="lw01" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/info/picocli/picocli/3.9.6/picocli-3.9.6.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
