@@ -2,6 +2,8 @@ package ru.rsreu.kibamba.labswork03;
 
 public class RectangleMethodIntegralCalculator {
     private double errorRate;
+    public static double tempPercentWorkDone = 0.0;
+    private static int it = 0;
 
     public RectangleMethodIntegralCalculator(double errorRate) {
         this.errorRate = errorRate;
@@ -22,8 +24,7 @@ public class RectangleMethodIntegralCalculator {
         int n = getN(a,b);
         double h = (b-a)/n;
         double percentWorkDone;
-        double tempPercentWorkDone = 0.0;
-        int it = 0;
+        //int it = 0;
         for(double i = a; i<=(b-h);i+=h){
             result += h*function.f((i+i+h)/2);
             percentWorkDone = Math.round( (((double) it) / n) * 100 );
