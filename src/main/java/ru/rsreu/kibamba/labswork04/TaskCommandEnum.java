@@ -36,6 +36,7 @@ public enum TaskCommandEnum {
         public void doTask(TaskWorker taskWorker,int taskLocalID){
             try {
                 taskWorker.await(taskLocalID);
+                ConsoleWorker.clearConsole();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

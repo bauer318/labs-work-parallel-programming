@@ -2,6 +2,7 @@ package ru.rsreu.kibamba.labswork04;
 
 import ru.rsreu.kibamba.labswork03.RectangleMethodIntegralCalculator;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class ConsoleWorker {
@@ -21,7 +22,14 @@ public class ConsoleWorker {
                 return 5;
         }
     }
-
+    public static void  clearConsole(){
+        try{
+            byte[] b = new byte[System.in.available()];
+            System.in.read(b);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
     public void runTasks(){
         while (true) {
             System.out.print("> ");
