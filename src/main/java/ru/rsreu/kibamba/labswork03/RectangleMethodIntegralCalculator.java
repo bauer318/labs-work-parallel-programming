@@ -24,7 +24,7 @@ public class RectangleMethodIntegralCalculator {
         int n = getN(a,b);
         double h = (b-a)/n;
         double percentWorkDone;
-        //int it = 0;
+        int it = 0;
         for(double i = a; i<=(b-h);i+=h){
             result += h*function.f((i+i+h)/2);
             percentWorkDone = Math.round( (((double) it) / n) * 100 );

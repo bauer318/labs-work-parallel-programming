@@ -11,10 +11,10 @@ import java.util.function.BiConsumer;
 public class FutureWorker {
     private static final double A = 0;
     private static final double B = 1;
-    private static final int TASK_WAITING = 10;
-    private static final double ERROR_RATE = 1E-5;
+    private static final int TASK_WAITING_TIME = 5;
+    private static final double ERROR_RATE = 1E-6;
 
-    public double solve(int threadNum){
+    public double doTask(int threadNum){
         ExecutorService executorService = Executors.newFixedThreadPool(threadNum);
         double a = A;
         double b = B;
@@ -31,15 +31,17 @@ public class FutureWorker {
         AtomicReference<Double> result = new AtomicReference<>((double)0);
         futureList.forEach(future ->{
             try{
-                double value = future.get(TASK_WAITING, TimeUnit.MINUTES);
+                double value = future.get(TASK_WAITING_TIME, TimeUnit.MINUTES);
                 double prev = result.get();
                 result.set(prev+value);
             }catch (InterruptedException interuruptedException) {
-            	interuruptedException.printStackTrace();
+                interuruptedException.printStackTrace();
             }catch(ExecutionException ex) {
-            	throw new RuntimeException();
+                throw new RuntimeException();
             }catch(TimeoutException timeOutException){
                 timeOutException.printStackTrace();
+            }catch (CancellationException e) {
+                e.printStackTrace();
             }
         });
         executorService.shutdown();
