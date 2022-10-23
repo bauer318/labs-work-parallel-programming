@@ -1,4 +1,4 @@
-package ru.rsreu.kibamba;
+package ru.rsreu.kibamba.labswork06;
 
 
 import java.io.File;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class FileWorker {
+public class FilePathCreator {
     private static String[] filesNameArray;
     private static Scanner in = new Scanner(System.in);
     public static List<String> filesPathList = new ArrayList<>();
@@ -29,14 +29,14 @@ public class FileWorker {
             }
         }
     }
-    private static String createFilePath(String fileName){
+    public static String createFilePath(String fileName){
         String userDirectory = Paths.get("")
                 .toAbsolutePath()
                 .toString();
         String filePath = userDirectory +"\\"+ fileName + ".txt";
         return filePath;
     }
-    private static boolean isExistFile(String fileName){
+    public static boolean isExistFile(String fileName){
         return new File(createFilePath(fileName)).isFile();
     }
 }
