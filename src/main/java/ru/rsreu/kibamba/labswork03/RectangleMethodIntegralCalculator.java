@@ -1,10 +1,12 @@
 package ru.rsreu.kibamba.labswork03;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 
 public class RectangleMethodIntegralCalculator {
     private double errorRate;
     public static double tempPercentWorkDone = 0.0;
+    private CountDownLatch countDownLatch;
     private Consumer<Integer> progressCallback = progress -> {
     };
 
