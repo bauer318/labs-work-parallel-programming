@@ -34,8 +34,8 @@ public class FutureWorker {
                 double value = future.get(TASK_WAITING_TIME, TimeUnit.MINUTES);
                 double prev = result.get();
                 result.set(prev+value);
-            }catch (InterruptedException interuruptedException) {
-                interuruptedException.printStackTrace();
+            }catch (InterruptedException ie) {
+                ie.printStackTrace();
             }catch(ExecutionException ex) {
                 throw new RuntimeException();
             }catch(TimeoutException timeOutException){
