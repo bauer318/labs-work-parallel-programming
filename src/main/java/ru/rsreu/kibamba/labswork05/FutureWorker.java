@@ -5,21 +5,25 @@ import ru.rsreu.kibamba.labswork03.RectangleMethodIntegralCalculator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiConsumer;
 
 public class FutureWorker {
     private static final double A = 0;
     private static final double B = 1;
     private static final int TASK_WAITING_TIME = 5;
-    private static final double ERROR_RATE = 1E-6;
-
-    public double doTask(int threadNum){
+    private static final double ERROR_RATE = 1E-8;
+    public double doTask(int threadNum, BiConsumer<Integer, Integer> progressCallback){
+        long startTime = System.currentTimeMillis();
         ExecutorService executorService = Executors.newFixedThreadPool(threadNum);
         double a = A;
         double b = B;
         double h = (B-A)/threadNum;
         List<Future<Double>> futureList = new ArrayList<>();
+
+        ReentrantLock lock = new ReentrantLock();
         for (int i=0; i<threadNum;i++){
             double currentA = a;
             double currentB = b;
@@ -28,12 +32,17 @@ public class FutureWorker {
             a = b;
             b+=h;
         }
+        AtomicInteger progress = new AtomicInteger(0);
+        progressCallback.accept(progress.get(), threadNum);
         AtomicReference<Double> result = new AtomicReference<>((double)0);
         futureList.forEach(future ->{
             try{
                 double value = future.get(TASK_WAITING_TIME, TimeUnit.MINUTES);
                 double prev = result.get();
                 result.set(prev+value);
+                    progress.set(progress.get() + 1);
+                    progressCallback.accept(progress.get(), threadNum);
+
             }catch (InterruptedException ie) {
                 ie.printStackTrace();
             }catch(ExecutionException ex) {

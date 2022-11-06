@@ -1,9 +1,12 @@
 package ru.rsreu.kibamba.labswork03;
 
+import java.util.function.Consumer;
+
 public class RectangleMethodIntegralCalculator {
     private double errorRate;
     public static double tempPercentWorkDone = 0.0;
-    private static int it = 0;
+    private Consumer<Integer> progressCallback = progress -> {
+    };
 
     public RectangleMethodIntegralCalculator(double errorRate) {
         this.errorRate = errorRate;
@@ -29,8 +32,8 @@ public class RectangleMethodIntegralCalculator {
             result += h*function.f((i+i+h)/2);
             percentWorkDone = Math.round( (((double) it) / n) * 100 );
             if(percentWorkDone-tempPercentWorkDone>=10){
-                System.out.println(percentWorkDone+ "% done");
                 tempPercentWorkDone = percentWorkDone;
+                progressCallback.accept((int)percentWorkDone);
             }
             it++;
         }
