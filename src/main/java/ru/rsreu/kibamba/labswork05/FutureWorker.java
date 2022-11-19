@@ -30,7 +30,6 @@ public class FutureWorker {
         locker = new ReentrantLock();
     }
     public double doTask(int threadNum, BiConsumer<Integer, Integer> progressCallback){
-        long startTime = System.currentTimeMillis();
         ExecutorService executorService = Executors.newFixedThreadPool(threadNum);
         double a = A;
         double b = B;
