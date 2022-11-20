@@ -1,9 +1,13 @@
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
-import ru.rsreu.kibamba.labswork08.CustomSemaphoreRealizer;
+import ru.rsreu.kibamba.labswork08.OwnSemaphore;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,141 +15,101 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CustomSemaphoreTest {
 
     @Test
-    public void testTryAcquire(){
-        CustomSemaphoreRealizer semaphore = new CustomSemaphoreRealizer(1);
+    public void testTryAcquire() {
+        OwnSemaphore semaphore = new OwnSemaphore(1);
         AtomicBoolean firstTaskDone = new AtomicBoolean(false);
-        AtomicBoolean secondTaskNotDone = new AtomicBoolean(false);
-        Thread firstTask = new Thread(()->{
+        AtomicBoolean secondTaskDone = new AtomicBoolean(false);
+        Thread firstTask = new Thread(() -> {
             firstTaskDone.set(semaphore.tryAcquire());
         });
-        Thread secondTask = new Thread(()->{
-            secondTaskNotDone.set(semaphore.tryAcquire());
+        Thread secondTask = new Thread(() -> {
+            secondTaskDone.set(semaphore.tryAcquire());
         });
         firstTask.start();
         secondTask.start();
-        try{
+        try {
             firstTask.join();
             secondTask.join();
-        }catch (InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        assertTrue(firstTaskDone.get() != secondTaskNotDone.get());
+        assertTrue(firstTaskDone.get() != secondTaskDone.get());
+    }
+    @Test
+    public void testTryAcquireSingleThread(){
+        OwnSemaphore semaphore = new OwnSemaphore(1);
+        assertTrue(semaphore.tryAcquire());
+        semaphore.release();
+        assertTrue(semaphore.tryAcquire());
+        assertFalse(semaphore.tryAcquire());
     }
 
-    @Test
-    public void testInterruptedException(){
-        CustomSemaphoreRealizer semaphore = new CustomSemaphoreRealizer(1);
+    @RepeatedTest(20)
+    public void testInterruptedException() {
+        OwnSemaphore semaphore = new OwnSemaphore(1);
         CountDownLatch latch = new CountDownLatch(1);
-
-        Thread thread1 = new Thread(() -> {
+        Thread mustBeExecuteSecond = new Thread(() -> {
+            try {
+                latch.await();
+                Assertions.assertThrows(InterruptedException.class, () -> semaphore.acquire());
+            } catch (InterruptedException e) {
+                System.out.println(e.getMessage());
+            }
+        });
+        Thread mustBeExecuteFirst = new Thread(() -> {
             try {
                 semaphore.acquire();
                 latch.countDown();
-                System.out.println("1");
             } catch (InterruptedException e) {
-                System.out.println("ici 1 "+e.getMessage());
+                e.printStackTrace();
             }
         });
-
-        Thread thread2 = new Thread(() -> {
-            //Assertions.assertThrows(InterruptedException.class, semaphore::acquire);
-            try {
-                latch.await();
-                System.out.println("2");
-                //Assertions.assertThrows(InterruptedException.class, semaphore::acquire);
-            } catch (InterruptedException e) {
-                System.out.println("ici 2 "+e.getMessage());
-            }
-        });
-
-        thread1.start();
-        thread2.start();
-        //thread2.interrupt();
-
+        mustBeExecuteSecond.start();
+        mustBeExecuteFirst.start();
+        mustBeExecuteSecond.interrupt();
         try {
-            thread1.join();
-            thread2.join();
+            mustBeExecuteSecond.join();
+            mustBeExecuteFirst.join();
         } catch (InterruptedException e) {
-            System.out.println("ici 3 "+e.getMessage());
+            e.printStackTrace();
         }
 
     }
 
-    @Test
-    public void doe() {
-        /*AtomicBoolean firstDone = new AtomicBoolean(false);
-        AtomicBoolean secondDone = new AtomicBoolean(false);*/
-
-        CustomSemaphoreRealizer semaphore = new CustomSemaphoreRealizer(1);
-        Thread t = new Thread(()->{
-            try {
-                semaphore.acquire();
-            }catch (InterruptedException e){
-                e.printStackTrace();
-            }finally {
-                semaphore.release();
-            }
-        });
-        t.start();
-        try{
-            t.join();
-        }catch (InterruptedException e){
-            e.printStackTrace();
+    @RepeatedTest(20)
+    public void testMultithreading() {
+        int permits = 4;
+        OwnSemaphore semaphore = new OwnSemaphore(permits);
+        CountDownLatch latch = new CountDownLatch(1);
+        AtomicBoolean runningTaskWasExceededPermits = new AtomicBoolean(false);
+        AtomicInteger runningTaskCounter = new AtomicInteger(0);
+        List<Thread> threadsList = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            threadsList.add(new Thread(() -> {
+                try {
+                    latch.await();
+                    semaphore.acquire();
+                    runningTaskWasExceededPermits.set(runningTaskCounter.incrementAndGet()>permits);
+                    Thread.sleep(15);
+                } catch (InterruptedException e) {
+                    System.out.println(e.getMessage());
+                } finally {
+                    runningTaskCounter.decrementAndGet();
+                    semaphore.release();
+                }
+            }));
         }
-        assertFalse(semaphore.tryAcquire());
-        /*Thread t2 = new Thread(()->{
-            semaphore.tryAcquire();
-        });
-        Thread t3 = new Thread(()->{
-            semaphore.release();
-        });
-        t2.start();
-        t3.start();
-        try{
-            t2.join();
-            t3.join();
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
-        assertEquals(1,semaphore.getPermits());*/
-        /*CountDownLatch latch = new CountDownLatch(1);
-
-        Thread thread1 = new Thread(() -> {
-            try {
-                latch.await();
-                semaphore.acquire();
-                firstDone.set(true);
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
-            } finally {
-                semaphore.release();
-            }
-        });
-
-        Thread thread2 = new Thread(() -> {
-            try {
-                latch.await();
-                semaphore.acquire();
-                secondDone.set(true);
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
-            } finally {
-                semaphore.release();
-            }
-        });
-
-        thread1.start();
-        thread2.start();
-
+        threadsList.forEach(t -> t.start());
         latch.countDown();
-        try {
-            thread1.join();
-            thread2.join();
-        } catch (InterruptedException e) {
-            System.out.println(e.getMessage());
-        }
-        Assertions.assertTrue(firstDone.get());
-        Assertions.assertTrue(secondDone.get());*/
+        threadsList.forEach(thread -> {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                System.out.println(e.getMessage());
+            }
+        });
+        Assertions.assertFalse(runningTaskWasExceededPermits.get());
+        Assertions.assertEquals(0, runningTaskCounter.get());
     }
 
 }

@@ -1,7 +1,6 @@
 package ru.rsreu.kibamba;
 
-import ru.rsreu.kibamba.labswork05.FutureWorker;
-import ru.rsreu.kibamba.labswork08.CustomSemaphoreRealizer;
+import ru.rsreu.kibamba.labswork08.OwnSemaphore;
 
 public class Runner {
 
@@ -11,6 +10,6 @@ public class Runner {
 		double result = futureWorker.doTask(4,(currentTask,totalTask)-> System.out.println("Task done "+currentTask+"/" +totalTask));
 		System.out.println("Result :" + result);
 		System.out.println("Time : " + (System.currentTimeMillis() - startTime) + " ms");*/
-		CustomSemaphoreRealizer customSemaphoreRealizer = new CustomSemaphoreRealizer(2);
+		OwnSemaphore customSemaphoreRealizer = new OwnSemaphore(2);
 	}
 }

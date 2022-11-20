@@ -1,10 +1,10 @@
 package ru.rsreu.kibamba.labswork08;
 
-public class CustomSemaphoreRealizer implements CustomSemaphore{
+public class OwnSemaphore implements CustomSemaphore{
 
     private final Object locker = new Object();
     private int permits;
-    public CustomSemaphoreRealizer(int permits){
+    public OwnSemaphore(int permits){
         this.permits = permits;
     }
 
